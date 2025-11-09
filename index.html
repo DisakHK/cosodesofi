@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ruedas Interactivas Centradas</title>
+  <style>
+    body {
+  background: black;
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1000px;
+  height: 1000px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rueda {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center center;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  outline: none;
+}
+
+#rueda-grande { width: 580px; }
+#rueda-media { width: 600px; }
+#rueda-pequena { width: 600px; }
+
+
+
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="rueda-grande" class="rueda"><img src="rueda grande.png"></div>
+    <div id="rueda-media" class="rueda"><img src="rueda media.png"></div>
+    <div id="rueda-pequena" class="rueda"><img src="rueda pequeña.png"></div>
+  </div>
+
+  <script>
+  let activo = false;
+  let inicioX = 0;
+  let anguloGrande = 0, anguloMedia = 0, anguloPequena = 0;
+
+  // --- FUNCIONES BASE ---
+  function actualizarRuedas() {
+    document.getElementById("rueda-grande").style.transform =
+      `translate(-50%, -50%) rotate(${anguloGrande}deg)`;
+    document.getElementById("rueda-media").style.transform =
+      `translate(-50%, -50%) rotate(${anguloMedia}deg)`;
+    document.getElementById("rueda-pequena").style.transform =
+      `translate(-50%, -50%) rotate(${anguloPequena}deg)`;
+  }
+
+  function mover(xActual) {
+    const delta = xActual - inicioX;
+    inicioX = xActual;
+
+    anguloGrande += delta * 0.1;
+    anguloMedia -= delta * 0.2;
+    anguloPequena += delta * 0.3;
+
+    actualizarRuedas();
+  }
+
+  // --- EVENTOS PC ---
+  document.addEventListener("mousedown", e => {
+    activo = true;
+    inicioX = e.clientX;
+  });
+
+  document.addEventListener("mouseup", () => activo = false);
+
+  document.addEventListener("mousemove", e => {
+    if (!activo) return;
+    mover(e.clientX);
+  });
+
+  // --- EVENTOS MÓVIL ---
+  document.addEventListener("touchstart", e => {
+    activo = true;
+    inicioX = e.touches[0].clientX;
+  });
+
+  document.addEventListener("touchmove", e => {
+    if (!activo) return;
+    mover(e.touches[0].clientX);
+  });
+
+  document.addEventListener("touchend", () => {
+    activo = false;
+  });
+</script>
+
+
+</body>
+</html>
